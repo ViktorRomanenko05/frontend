@@ -7,10 +7,18 @@ const spinner = document.querySelector(".loader");
 const citySearchButton = document.querySelector("#city-search-button");
 
 const APP_ID = "cb8949512c5f49588b3735c24ccab5c3";
-let cityName = "";
-spinner.classList.add("hide");
 
-const getWeather = async () => {
+const getWeather = async (event) => {
+
+    event.preventDefault();
+
+    let cityName = cityInput.value.trim();
+    if (cityName === ""){
+        alert("Please enter city name");
+        return;
+    }
+
+    citySearchButton.setAttribute("disabled", "");
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${APP_ID}`;
     weatherOutputBox.classList.remove("error");
     spinner.classList.remove("hide");
@@ -19,10 +27,8 @@ const getWeather = async () => {
     try{
         const response = await fetch (url,
             {method: "GET",});
-        console.log(url);
 
         const weatherGet = await response.json();
-        console.log(weatherGet);
 
         if (response.ok) {
             displayTitle.textContent = `${weatherGet.name}`;
@@ -34,33 +40,27 @@ const getWeather = async () => {
     </div>`
         }
         else {
-            throw Object.assign(new Error("Error"), {responceError: weatherGet});
+            throw Object.assign(new Error("Error"), {responseError: weatherGet});
         }
     }
+
     catch(error){
         weatherOutputBox.classList.add("error");
         displayTitle.textContent = "ERROR";
-        if (error.responceError) {
-                resultOutput.textContent = `${error.responceError.cod} ${error.responceError.message}`;
+        if (error.responseError) {
+                resultOutput.textContent = `${error.responseError.cod} ${error.responseError.message}`;
         }
         else {
             resultOutput.textContent = "Error of weather fetching. Please try again.";
             console.error(error);
         }
     }
-    finally{spinner.classList.add("hide");}
-    citySearchButton.removeAttribute("disabled", "");
-}
 
-const searchCity = (event) => {
-    event.preventDefault();
-    cityName = cityInput.value.trim();
-    if (cityName === ""){
-        alert("Please enter city name");
-        return;
+    finally{
+        spinner.classList.add("hide");
+        citySearchButton.removeAttribute("disabled");
+        searchCityForm.reset();
     }
-    getWeather();
-    searchCityForm.reset();
 }
 
-searchCityForm.addEventListener("submit", searchCity);
+searchCityForm.addEventListener("submit", getWeather);
