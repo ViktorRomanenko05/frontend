@@ -73,7 +73,7 @@ for (let i = 0; i<10; i++){
 //Определим сумму всех элементов массива используя цикл for
 let sum4 = 0;
 for (i =0; i < arrayNumbers4.length; i++) {
-sum4 += arrayNumbers4 [i];
+    sum4 += arrayNumbers4 [i];
 }
 //Выводим результат
 console.log("Задача 4");
@@ -117,4 +117,3 @@ for (let i = 0; i < words.length; i++) {
     let cleanedWord = words[i].replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
     console.log(cleanedWord);
 }
-
